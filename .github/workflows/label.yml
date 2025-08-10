@@ -1,0 +1,35 @@
+name: HIFITI-Auto-Checkin
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 23 * * *"   # UTC 时间，每天 07:40 北京时间执行
+
+jobs:
+  checkin:
+    name: Checkin
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js latest
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+
+      - name: Debug Secrets
+        run: |
+          if [ -z "$ACCOUNTS" ]; then
+            echo "❌ ACCOUNTS is empty!"
+            exit 1
+          else
+            echo "✅ ACCOUNTS is set (content hidden)"
+          fi
+        env:
+          ACCOUNTS: ${{ secrets.ACCOUNTS }}
+
+      - name: Checkin
+        run: node main.js
+        env:
+          ACCOUNTS: ${{ secrets.ACCOUNTS }}
