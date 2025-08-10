@@ -2,7 +2,7 @@ name: Hifiti Auto Checkin
 
 on:
   workflow_dispatch:       # 允许手动运行
-  schedule:UTC+8 08:00                # 定时运行（UTC 时间）
+  schedule:                # 定时运行（UTC 时间）
     - cron: "0 1 * * *"    # 每天 UTC 01:00 执行（北京时间 09:00）
 
 jobs:
@@ -25,4 +25,3 @@ jobs:
         env:
           ACCOUNTS: ${{ secrets.ACCOUNTS }}   # 从 GitHub Secrets 读取
         run: node main.js
-
