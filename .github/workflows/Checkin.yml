@@ -1,27 +1,28 @@
-name: HIFITI-Auto-Checkin
+name: Hifiti Auto Checkin
 
 on:
-  workflow_dispatch:
-  schedule:
-    # UTC
-    - cron: "40 23 * * *"
+  workflow_dispatch:       # 允许手动运行
+  schedule:UTC+8 08:00                # 定时运行（UTC 时间）
+    - cron: "0 1 * * *"    # 每天 UTC 01:00 执行（北京时间 09:00）
 
 jobs:
   checkin:
-    name: Checkin
     runs-on: ubuntu-latest
-    env:
-      ACCOUNTS: ${{ secrets.ACCOUNTS }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Use Node.js latest.
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: latest
 
-      - name: Checkin
-        shell: bash
-        run: |
-          node main.js
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run auto checkin
+        env:
+          ACCOUNTS: ${{ secrets.ACCOUNTS }}   # 从 GitHub Secrets 读取
+        run: node main.js
+
